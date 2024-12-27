@@ -10,7 +10,7 @@
                 <img src="<?= base_url('admin/img/user2-160x160.jpg') ?>" class="img-circle elevation-2" alt="User Image">
             </div>
             <div class="info">
-                <a href="#" class="d-block">Admin</a>
+                <a href="#" class="d-block">Dokter</a>
             </div>
         </div>
 
@@ -24,29 +24,29 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="<?= base_url('/jadwal') ?>" class="nav-link <?= url_is('/jadwal') ? 'active' : '' ?>">
-                        <i class="nav-icon fas fa-th"></i>
+                    <a href="<?= base_url('/dokter/jadwal') ?>" class="nav-link <?= url_is('/dokter/jadwal') ? 'active' : '' ?>">
+                        <i class="nav-icon fas fa-calendar-check"></i>
                         <p>Jadwal Periksa</p>
 						<span class="badge badge-success right">Dokter</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="<?= base_url('/memeriksa') ?>" class="nav-link <?= url_is('/memeriksa') ? 'active' : '' ?>">
-                        <i class="nav-icon fas fa-copy"></i>
+                    <a href="<?= base_url('/dokter/memeriksa') ?>" class="nav-link <?= url_is('/dokter/memeriksa') ? 'active' : '' ?>">
+                        <i class="nav-icon fas fa-stethoscope"></i>
                         <p>Memeriksa Pasien</p>
 						<span class="badge badge-success right">Dokter</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="<?= base_url('/riwayatPasien') ?>" class="nav-link <?= url_is('/riwayatPasien') ? 'active' : '' ?>">
-                        <i class="nav-icon fas fa-chart-pie"></i>
+                    <a href="<?= base_url('/dokter/riwayat') ?>" class="nav-link <?= url_is('/dokter/riwayat') ? 'active' : '' ?>">
+                        <i class="nav-icon fas fa-history"></i>
                         <p>Riwayat Pasien</p>
 						<span class="badge badge-success right">Dokter</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="<?= base_url('/dokDashboard') ?>" class="nav-link <?= url_is('obat') ? 'active' : '' ?>">
-                        <i class="nav-icon fas fa-tree"></i>
+                    <a href="<?= base_url('/dokter/profil') ?>" class="nav-link <?= url_is('/dokter/profil') ? 'active' : '' ?>">
+                        <i class="nav-icon fas fa-user"></i>
                         <p>Profil</p>
 						<span class="badge badge-success right">Dokter</span>
                     </a>

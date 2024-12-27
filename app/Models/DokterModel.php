@@ -26,6 +26,16 @@ class DokterModel extends Model
                     ->first();
     }
 
+    public function getDokterById($id)
+    {
+        $result = $this->select('dokter.*, poli.nama_poli')
+                      ->join('poli', 'poli.poli_id = dokter.id_poli')
+                      ->where('dokter.dokter_id', $id)
+                      ->first();
+                      
+        return $result ?? null;
+    }
+
 }
 
 

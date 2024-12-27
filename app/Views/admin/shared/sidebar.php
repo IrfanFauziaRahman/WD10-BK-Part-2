@@ -24,29 +24,29 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="<?= base_url('/adminDokter') ?>" class="nav-link <?= url_is('adminDokter') ? 'active' : '' ?>">
-                        <i class="nav-icon fas fa-th"></i>
+                    <a href="<?= base_url('/admin/dokter') ?>" class="nav-link <?= url_is('/admin/dokter') ? 'active' : '' ?>">
+                        <i class="nav-icon 	fas fa-stethoscope"></i>
                         <p>Dokter</p>
 						<span class="badge badge-primary right">Admin</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="<?= base_url('/adminPasien') ?>" class="nav-link <?= url_is('adminPasien') ? 'active' : '' ?>">
-                        <i class="nav-icon fas fa-copy"></i>
+                    <a href="<?= base_url('/admin/pasien') ?>" class="nav-link <?= url_is('/admin/pasien') ? 'active' : '' ?>">
+                        <i class="nav-icon fas fa-user-injured"></i>
                         <p>Pasien</p>
 						<span class="badge badge-primary right">Admin</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="<?= base_url('/poli') ?>" class="nav-link <?= url_is('poli') ? 'active' : '' ?>">
-                        <i class="nav-icon fas fa-chart-pie"></i>
+                    <a href="<?= base_url('/admin/poli') ?>" class="nav-link <?= url_is('/admin/poli') ? 'active' : '' ?>">
+                        <i class="nav-icon fas fa-hospital"></i>
                         <p>Poli</p>
 						<span class="badge badge-primary right">Admin</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="<?= base_url('/obat') ?>" class="nav-link <?= url_is('obat') ? 'active' : '' ?>">
-                        <i class="nav-icon fas fa-tree"></i>
+                    <a href="<?= base_url('/admin/obat') ?>" class="nav-link <?= url_is('/admin/obat') ? 'active' : '' ?>">
+                        <i class="nav-icon fas fa-pills"></i>
                         <p>Obat</p>
 						<span class="badge badge-primary right">Admin</span>
                     </a>

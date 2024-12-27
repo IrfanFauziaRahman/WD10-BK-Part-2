@@ -32,6 +32,7 @@
 
                         <!-- Register Form -->
                         <form action="<?= base_url('/auth/registerAction') ?>" method="post" class="mb-4">
+                        <?= csrf_field() ?>
                             <div class="col-md-12 mb-3">
                                 <label for="nama_pasien" class="form-label">Nama Pasien</label>
                                 <input type="text" id="nama_pasien" name="nama_pasien" class="form-control" placeholder="Nama Pasien" required>

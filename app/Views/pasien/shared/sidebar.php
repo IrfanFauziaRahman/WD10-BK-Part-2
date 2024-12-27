@@ -20,14 +20,14 @@
                     <a href="<?= base_url('/pasienDashboard') ?>" class="nav-link <?= url_is('/pasienDashboard') ? 'active' : '' ?>">
                         <i class="nav-icon fas fa-tachometer-alt"></i>
                         <p>Dashboard</p>
-						<span class="badge badge-warning right">Pasien</span>
+                        <span class="badge badge-warning right">Pasien</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="<?= base_url('/daftarPoli') ?>" class="nav-link <?= url_is('/daftarPoli') ? 'active' : '' ?>">
+                    <a href="<?= base_url('/pasien/poli') ?>" class="nav-link <?= url_is('/pasien/poli*') ? 'active' : '' ?>">
                         <i class="nav-icon fas fa-th"></i>
                         <p>Poli</p>
-						<span class="badge badge-warning right">Pasien</span>
+                        <span class="badge badge-warning right">Pasien</span>
                     </a>
                 </li>
             </ul>

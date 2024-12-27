@@ -10,7 +10,17 @@ class AuthController extends BaseController
 {
     public function login()
     {
-        // Tampilkan halaman login
+        if (session()->get('logged_in')) {
+            $role = session()->get('role');
+            if ($role === 'admin') {
+                return redirect()->to('/admin/dashboard');
+            } elseif ($role === 'dokter') {
+                return redirect()->to('/dokter/dashboard');
+            } elseif ($role === 'pasien') {
+                return redirect()->to('/pasien/dashboard');
+            }
+        }
+        
         return view('login');
     }
 
@@ -24,93 +34,125 @@ class AuthController extends BaseController
         $user = $userModel->where('email', $email)->first();
 
         if ($user) {
-            // Verifikasi password
             if (password_verify($password, $user['password'])) {
-                // Set data sesi pengguna
                 $session->set([
-                    'user_id' => $user['id'],
-                    'user_name' => $user['name'],
-                    'user_role' => $user['role'],
+                    'id' => $user['id'],
+                    'name' => $user['name'],
+                    'email' => $user['email'],
+                    'role' => $user['role'],
                     'logged_in' => true,
                 ]);
 
-                // Redirect berdasarkan peran
                 if ($user['role'] === 'admin') {
-                    return redirect()->to('/admin/dashboard');
+                    return redirect()->to('/adminDashboard');
                 } elseif ($user['role'] === 'dokter') {
-                    return redirect()->to('/dokter/dashboard');
+                    return redirect()->to('/dokDashboard');
                 } elseif ($user['role'] === 'pasien') {
-                    return redirect()->to('/pasien/dashboard');
+                    return redirect()->to('/pasienDashboard');
                 }
             } else {
-                // Password salah
-                $session->setFlashdata('error', 'Password salah.');
+                $session->setFlashdata('error', 'Password salah');
+                return redirect()->to('/login');
             }
         } else {
-            // Email tidak ditemukan
-            $session->setFlashdata('error', 'Email tidak ditemukan.');
+            $session->setFlashdata('error', 'Email tidak ditemukan');
+            return redirect()->to('/login');
         }
-
-        return redirect()->to('/login');
-    }
-
-    public function logout()
-    {
-        // Hancurkan sesi dan redirect ke login
-        session()->destroy();
-        return redirect()->to('/login');
     }
 
     public function register()
     {
-        // Tampilkan halaman register
+        if (session()->get('logged_in')) {
+            return redirect()->to('/login');
+        }
         return view('register');
     }
 
     public function registerAction()
-{
-    $request = $this->request;
-    $session = session();
+    {
+        log_message('debug', 'Starting registration process');
+        log_message('debug', 'POST data: ' . print_r($this->request->getPost(), true));
 
-    // Ambil data pasien
-    $pasienData = [
-        'nama_pasien' => $request->getPost('nama_pasien'),
-        'alamat' => $request->getPost('alamat'),
-        'no_ktp' => $request->getPost('no_ktp'),
-        'no_hp' => $request->getPost('no_hp')
-    ];
+        $rules = [
+            'nama_pasien' => 'required|min_length[3]',
+            'alamat' => 'required',
+            'no_ktp' => 'required|numeric|min_length[16]|max_length[16]',
+            'no_hp' => 'required|numeric|min_length[10]',
+            'email' => 'required|valid_email|is_unique[users.email]',
+            'password' => 'required|min_length[6]'
+        ];
 
-    // Inisialisasi model pasien dan simpan data pasien
-    $pasienModel = new PasienModel();
-    $currentDate = new DateTime();
-    $no_rm = $pasienModel->generateNoRM($currentDate);
-    $pasienData['no_rm'] = $no_rm;
+        if (!$this->validate($rules)) {
+            log_message('error', 'Validation failed: ' . print_r($this->validator->getErrors(), true));
+            session()->setFlashdata('error', implode(', ', $this->validator->getErrors()));
+            return redirect()->back()->withInput();
+        }
 
-    // Simpan data user untuk pasien
-    $userData = [
-        'name' => $request->getPost('nama_pasien'),
-        'email' => $request->getPost('email'),
-        'password' => password_hash($request->getPost('password'), PASSWORD_BCRYPT), // Hash password
-        'role' => 'pasien'
-    ];
+        $userModel = new UserModel();
+        $pasienModel = new PasienModel();
 
-    // Inisialisasi model user dan simpan data user
-    $userModel = new UserModel();
-    $userModel->save($userData);
+        $userData = [
+            'name' => $this->request->getPost('nama_pasien'),
+            'email' => $this->request->getPost('email'),
+            'password' => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
+            'role' => 'pasien'
+        ];
 
-    // Ambil ID user yang baru saja disimpan
-    $userId = $userModel->insertID();
+        $db = \Config\Database::connect();
+        $db->transStart();
 
-    // Tambahkan user_id ke data pasien
-    $pasienData['user_id'] = $userId;
+        try {
+            log_message('debug', 'Attempting to insert user data');
+            if (!$userModel->insert($userData)) {
+                throw new \Exception('Failed to insert user: ' . implode(', ', $userModel->errors()));
+            }
+            
+            $userId = $userModel->getInsertID();
+            if (!$userId) {
+                throw new \Exception('Failed to get user ID after insert');
+            }
+            log_message('debug', 'User inserted with ID: ' . $userId);
 
-    // Simpan data pasien
-    $pasienModel->save($pasienData);
+            $currentDate = new DateTime();
+            $no_rm = $pasienModel->generateNoRM($currentDate);
+            log_message('debug', 'Generated RM number: ' . $no_rm);
 
-    // Set flash data untuk success
-    $session->setFlashdata('success', 'Pendaftaran berhasil! Silakan login.');
+            $pasienData = [
+                'nama_pasien' => $this->request->getPost('nama_pasien'),
+                'alamat' => $this->request->getPost('alamat'),
+                'no_ktp' => $this->request->getPost('no_ktp'),
+                'no_hp' => $this->request->getPost('no_hp'),
+                'no_rm' => $no_rm,
+                'user_id' => $userId
+            ];
 
-    return redirect()->to('/login'); // Redirect ke halaman login setelah pendaftaran sukses
-}
+            log_message('debug', 'Attempting to insert patient data');
+            if (!$pasienModel->insert($pasienData)) {
+                throw new \Exception('Failed to insert patient: ' . implode(', ', $pasienModel->errors()));
+            }
 
+            $db->transComplete();
+            
+            if ($db->transStatus() === false) {
+                throw new \Exception('Transaction failed');
+            }
+
+            log_message('debug', 'Registration completed successfully');
+            session()->setFlashdata('success', 'Registrasi berhasil! Silakan login.');
+            return redirect()->to('/login');
+
+        } catch (\Exception $e) {
+            $db->transRollback();
+            log_message('error', 'Registration error: ' . $e->getMessage());
+            log_message('error', 'Stack trace: ' . $e->getTraceAsString());
+            session()->setFlashdata('error', 'Terjadi kesalahan: ' . $e->getMessage());
+            return redirect()->back()->withInput();
+        }
+    }
+
+    public function logout()
+    {
+        session()->destroy();
+        return redirect()->to('/login');
+    }
 }

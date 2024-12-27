@@ -25,7 +25,8 @@
 	<!-- summernote -->
 	<link rel="stylesheet" href="<?php echo base_url()?>/dokter/plugins/summernote/summernote-bs4.css">
 	<!-- Google Font: Source Sans Pro -->
-	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700" rel="stylesheet">	
+	
 </head>
 <body class="hold-transition sidebar-mini layout-fixed">
 	<div class="wrapper">
@@ -84,5 +85,7 @@
 	<script src="<?php echo base_url()?>/dokter/plugins/overlayScrollbars/js/jquery.overlayScrollbars.min.js"></script>
 	<!-- dokterLTE App -->
 	<script src="<?php echo base_url()?>/dokter/js/adminlte.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
 </body>
 </html>
